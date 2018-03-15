@@ -18,7 +18,8 @@
     "build": "ng build --prod --deploy-url=../addons/we7_ionic/template/mobile",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "git": "git add . && git commit -m 'i' && git push origin master"
   },
   "private": true,
   "dependencies": {

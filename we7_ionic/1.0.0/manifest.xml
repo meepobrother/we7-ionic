@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="">
+	<application setting="false">
+		<name><![CDATA[IONIC]]></name>
+		<identifie><![CDATA[we7_ionic]]></identifie>
+		<version><![CDATA[1.0.0]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[Ionic测试]]></ability>
+		<description><![CDATA[Ionic测试]]></description>
+		<author><![CDATA[]]></author>
+		<url><![CDATA[https://github.com/meepobrother/we7_ionic#readme]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+			<message type="text" />
+		</handles>
+		<rule embed="false" />
+		<card embed="false" />
+		<supports>
+			<item type="app" />
+		</supports>
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="首页" do="index" state="" direct="" />
+		</cover>
+		<menu>
+		</menu>
+	</bindings>
+	<permissions></permissions>
+	<install><![CDATA[install.php]]></install>
+	<uninstall><![CDATA[uninstall.php]]></uninstall>
+	<upgrade><![CDATA[upgrade.php]]></upgrade>
+</manifest>

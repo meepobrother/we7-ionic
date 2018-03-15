@@ -1,0 +1,37 @@
+import { PlatformConfig } from '@ionic/core';
+export declare type DocumentDirection = 'ltr' | 'rtl';
+export declare class Platform {
+    _element: HTMLIonPlatformElement;
+    constructor();
+    is(platformName: string): boolean;
+    isAsync(platformName: string): Promise<boolean>;
+    platforms(): string[];
+    platformsAsync(): Promise<string[]>;
+    versions(): PlatformConfig[];
+    versionsAsync(): Promise<PlatformConfig[]>;
+    ready(): Promise<any>;
+    readonly isRTL: boolean;
+    setDir(_dir: DocumentDirection, updateDocument: boolean): void;
+    dir(): DocumentDirection;
+    setLang(language: string, updateDocument: boolean): void;
+    lang(): string;
+    getQueryParam(key: string): string;
+    getQueryParamAsync(key: string): Promise<string>;
+    height(): number;
+    isLandscape(): boolean;
+    isPortrait(): boolean;
+    testUserAgent(expression: string): boolean;
+    url(): string;
+    width(): number;
+}
+export declare function isImpl(platform: Platform, platformName: string): boolean;
+export declare function isAsyncImpl(platform: Platform, platformName: string): Promise<boolean>;
+export declare function platformsImpl(platform: Platform): string[];
+export declare function platformsAsyncImpl(platform: Platform): Promise<string[]>;
+export declare function versionsImpl(platform: Platform): PlatformConfig[];
+export declare function versionsAsyncImpl(platform: Platform): Promise<PlatformConfig[]>;
+export declare function readyImpl(platform: Platform): Promise<any>;
+export declare function getQueryParamImpl(platform: Platform, key: string): string;
+export declare function getQueryParamAsyncImpl(platform: Platform, key: string): Promise<string>;
+export declare function initialize(platform: Platform): void;
+export declare function getHydratedPlatform(platform: Platform): Promise<HTMLIonPlatformElement>;

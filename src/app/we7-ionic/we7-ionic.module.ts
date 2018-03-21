@@ -8,6 +8,9 @@ import { PickerController } from './providers/picker-controller.service';
 import { MenuController } from './providers/menu-controller.service';
 import { Platform } from './providers/platform.service';
 import { ToastController } from './providers/toast-controller.service';
+import { ModalController } from './providers/modal-controller.service';
+import { AngularDelegate } from './providers/angular-delegate.service';
+
 // directives
 import { VirtualFooter } from './directives/virtual-footer.directive';
 import { VirtualScroll } from './directives/virtual-scroll.directive';
@@ -56,6 +59,8 @@ export class We7IonicModule {
         MenuController,
         Platform,
         ToastController,
+        ModalController,
+        AngularDelegate,
         { provide: APP_INITIALIZER, useFactory: setupProvideEvents, multi: true },
       ]
     }

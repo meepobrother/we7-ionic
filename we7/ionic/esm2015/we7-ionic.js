@@ -1,4 +1,4 @@
-import { Injectable, Directive, TemplateRef, ViewContainerRef, ChangeDetectorRef, ContentChild, ElementRef, HostListener, Renderer2, Input, Component, ViewEncapsulation, Attribute, ComponentFactoryResolver, EventEmitter, Output, NgModule, APP_INITIALIZER, ApplicationRef, Injector } from '@angular/core';
+import { Injectable, ApplicationRef, Injector, ComponentFactoryResolver, Directive, TemplateRef, ViewContainerRef, ChangeDetectorRef, ContentChild, ElementRef, HostListener, Renderer2, Input, Component, ViewEncapsulation, Attribute, EventEmitter, Output, NgModule, APP_INITIALIZER } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NavigationEnd, NavigationStart, Router, ActivatedRoute, ChildrenOutletContexts } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -589,6 +589,117 @@ ToastController.decorators = [
 ];
 /** @nocollapse */
 ToastController.ctorParameters = () => [];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+class AngularDelegate {
+    /**
+     * @param {?} appRef
+     */
+    constructor(appRef) {
+        this.appRef = appRef;
+    }
+    /**
+     * @param {?} cfr
+     * @param {?} injector
+     * @return {?}
+     */
+    create(cfr, injector) {
+        return new AngularFrameworkDelegate(cfr, injector, this.appRef);
+    }
+}
+AngularDelegate.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+AngularDelegate.ctorParameters = () => [
+    { type: ApplicationRef, },
+];
+class AngularFrameworkDelegate {
+    /**
+     * @param {?} cfr
+     * @param {?} injector
+     * @param {?} appRef
+     */
+    constructor(cfr, injector, appRef) {
+        this.cfr = cfr;
+        this.injector = injector;
+        this.appRef = appRef;
+        this.elRefMap = new WeakMap();
+    }
+    /**
+     * @param {?} container
+     * @param {?} component
+     * @param {?=} data
+     * @param {?=} cssClasses
+     * @return {?}
+     */
+    attachViewToDom(container, component, data, cssClasses) {
+        const /** @type {?} */ componentFactory = this.cfr.resolveComponentFactory(component);
+        const /** @type {?} */ hostElement = document.createElement(componentFactory.selector);
+        if (data) {
+            Object.assign(hostElement, data);
+        }
+        const /** @type {?} */ childInjector = Injector.create([], this.injector);
+        const /** @type {?} */ componentRef = componentFactory.create(childInjector, [], hostElement);
+        for (const /** @type {?} */ clazz of cssClasses) {
+            hostElement.classList.add(clazz);
+        }
+        container.appendChild(hostElement);
+        this.appRef.attachView(componentRef.hostView);
+        this.elRefMap.set(hostElement, componentRef);
+        return Promise.resolve(hostElement);
+    }
+    /**
+     * @param {?} _container
+     * @param {?} component
+     * @return {?}
+     */
+    removeViewFromDom(_container, component) {
+        const /** @type {?} */ mountingData = this.elRefMap.get(component);
+        if (mountingData) {
+            mountingData.componentRef.destroy();
+            this.elRefMap.delete(component);
+        }
+        return Promise.resolve();
+    }
+}
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+class ModalController extends OverlayBaseController {
+    /**
+     * @param {?} cfr
+     * @param {?} injector
+     * @param {?} angularDelegate
+     */
+    constructor(cfr, injector, angularDelegate) {
+        super('ion-modal-controller');
+        this.cfr = cfr;
+        this.injector = injector;
+        this.angularDelegate = angularDelegate;
+    }
+    /**
+     * @param {?=} opts
+     * @return {?}
+     */
+    create(opts) {
+        return super.create(Object.assign({}, opts, { delegate: this.angularDelegate.create(this.cfr, this.injector) }));
+    }
+}
+ModalController.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+ModalController.ctorParameters = () => [
+    { type: ComponentFactoryResolver, },
+    { type: Injector, },
+    { type: AngularDelegate, },
+];
 
 /**
  * @fileoverview added by tsickle
@@ -1734,6 +1845,8 @@ class We7IonicModule {
                 MenuController,
                 Platform,
                 ToastController,
+                ModalController,
+                AngularDelegate,
                 { provide: APP_INITIALIZER, useFactory: setupProvideEvents, multi: true },
             ]
         };
@@ -1754,117 +1867,6 @@ We7IonicModule.decorators = [
 ];
 /** @nocollapse */
 We7IonicModule.ctorParameters = () => [];
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-class AngularDelegate {
-    /**
-     * @param {?} appRef
-     */
-    constructor(appRef) {
-        this.appRef = appRef;
-    }
-    /**
-     * @param {?} cfr
-     * @param {?} injector
-     * @return {?}
-     */
-    create(cfr, injector) {
-        return new AngularFrameworkDelegate(cfr, injector, this.appRef);
-    }
-}
-AngularDelegate.decorators = [
-    { type: Injectable },
-];
-/** @nocollapse */
-AngularDelegate.ctorParameters = () => [
-    { type: ApplicationRef, },
-];
-class AngularFrameworkDelegate {
-    /**
-     * @param {?} cfr
-     * @param {?} injector
-     * @param {?} appRef
-     */
-    constructor(cfr, injector, appRef) {
-        this.cfr = cfr;
-        this.injector = injector;
-        this.appRef = appRef;
-        this.elRefMap = new WeakMap();
-    }
-    /**
-     * @param {?} container
-     * @param {?} component
-     * @param {?=} data
-     * @param {?=} cssClasses
-     * @return {?}
-     */
-    attachViewToDom(container, component, data, cssClasses) {
-        const /** @type {?} */ componentFactory = this.cfr.resolveComponentFactory(component);
-        const /** @type {?} */ hostElement = document.createElement(componentFactory.selector);
-        if (data) {
-            Object.assign(hostElement, data);
-        }
-        const /** @type {?} */ childInjector = Injector.create([], this.injector);
-        const /** @type {?} */ componentRef = componentFactory.create(childInjector, [], hostElement);
-        for (const /** @type {?} */ clazz of cssClasses) {
-            hostElement.classList.add(clazz);
-        }
-        container.appendChild(hostElement);
-        this.appRef.attachView(componentRef.hostView);
-        this.elRefMap.set(hostElement, componentRef);
-        return Promise.resolve(hostElement);
-    }
-    /**
-     * @param {?} _container
-     * @param {?} component
-     * @return {?}
-     */
-    removeViewFromDom(_container, component) {
-        const /** @type {?} */ mountingData = this.elRefMap.get(component);
-        if (mountingData) {
-            mountingData.componentRef.destroy();
-            this.elRefMap.delete(component);
-        }
-        return Promise.resolve();
-    }
-}
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-class ModalController extends OverlayBaseController {
-    /**
-     * @param {?} cfr
-     * @param {?} injector
-     * @param {?} angularDelegate
-     */
-    constructor(cfr, injector, angularDelegate) {
-        super('ion-modal-controller');
-        this.cfr = cfr;
-        this.injector = injector;
-        this.angularDelegate = angularDelegate;
-    }
-    /**
-     * @param {?=} opts
-     * @return {?}
-     */
-    create(opts) {
-        return super.create(Object.assign({}, opts, { delegate: this.angularDelegate.create(this.cfr, this.injector) }));
-    }
-}
-ModalController.decorators = [
-    { type: Injectable },
-];
-/** @nocollapse */
-ModalController.ctorParameters = () => [
-    { type: ComponentFactoryResolver, },
-    { type: Injector, },
-    { type: AngularDelegate, },
-];
 
 /**
  * @fileoverview added by tsickle

@@ -420,6 +420,87 @@ ToastController.decorators = [
     { type: core.Injectable },
 ];
 ToastController.ctorParameters = function () { return []; };
+var AngularDelegate = /** @class */ (function () {
+    function AngularDelegate(appRef) {
+        this.appRef = appRef;
+    }
+    AngularDelegate.prototype.create = function (cfr, injector) {
+        return new AngularFrameworkDelegate(cfr, injector, this.appRef);
+    };
+    return AngularDelegate;
+}());
+AngularDelegate.decorators = [
+    { type: core.Injectable },
+];
+AngularDelegate.ctorParameters = function () { return [
+    { type: core.ApplicationRef, },
+]; };
+var AngularFrameworkDelegate = /** @class */ (function () {
+    function AngularFrameworkDelegate(cfr, injector, appRef) {
+        this.cfr = cfr;
+        this.injector = injector;
+        this.appRef = appRef;
+        this.elRefMap = new WeakMap();
+    }
+    AngularFrameworkDelegate.prototype.attachViewToDom = function (container, component, data, cssClasses) {
+        var componentFactory = this.cfr.resolveComponentFactory(component);
+        var hostElement = document.createElement(componentFactory.selector);
+        if (data) {
+            Object.assign(hostElement, data);
+        }
+        var childInjector = core.Injector.create([], this.injector);
+        var componentRef = componentFactory.create(childInjector, [], hostElement);
+        try {
+            for (var cssClasses_1 = __values(cssClasses), cssClasses_1_1 = cssClasses_1.next(); !cssClasses_1_1.done; cssClasses_1_1 = cssClasses_1.next()) {
+                var clazz = cssClasses_1_1.value;
+                hostElement.classList.add(clazz);
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (cssClasses_1_1 && !cssClasses_1_1.done && (_a = cssClasses_1.return)) _a.call(cssClasses_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        container.appendChild(hostElement);
+        this.appRef.attachView(componentRef.hostView);
+        this.elRefMap.set(hostElement, componentRef);
+        return Promise.resolve(hostElement);
+        var e_1, _a;
+    };
+    AngularFrameworkDelegate.prototype.removeViewFromDom = function (_container, component) {
+        var mountingData = this.elRefMap.get(component);
+        if (mountingData) {
+            mountingData.componentRef.destroy();
+            this.elRefMap.delete(component);
+        }
+        return Promise.resolve();
+    };
+    return AngularFrameworkDelegate;
+}());
+var ModalController = /** @class */ (function (_super) {
+    __extends(ModalController, _super);
+    function ModalController(cfr, injector, angularDelegate) {
+        var _this = _super.call(this, 'ion-modal-controller') || this;
+        _this.cfr = cfr;
+        _this.injector = injector;
+        _this.angularDelegate = angularDelegate;
+        return _this;
+    }
+    ModalController.prototype.create = function (opts) {
+        return _super.prototype.create.call(this, Object.assign({}, opts, { delegate: this.angularDelegate.create(this.cfr, this.injector) }));
+    };
+    return ModalController;
+}(OverlayBaseController));
+ModalController.decorators = [
+    { type: core.Injectable },
+];
+ModalController.ctorParameters = function () { return [
+    { type: core.ComponentFactoryResolver, },
+    { type: core.Injector, },
+    { type: AngularDelegate, },
+]; };
 var VirtualFooter = /** @class */ (function () {
     function VirtualFooter(templateRef) {
         this.templateRef = templateRef;
@@ -1176,6 +1257,8 @@ var We7IonicModule = /** @class */ (function () {
                 MenuController,
                 Platform,
                 ToastController,
+                ModalController,
+                AngularDelegate,
                 { provide: core.APP_INITIALIZER, useFactory: setupProvideEvents, multi: true },
             ]
         };
@@ -1192,87 +1275,6 @@ We7IonicModule.decorators = [
             },] },
 ];
 We7IonicModule.ctorParameters = function () { return []; };
-var AngularDelegate = /** @class */ (function () {
-    function AngularDelegate(appRef) {
-        this.appRef = appRef;
-    }
-    AngularDelegate.prototype.create = function (cfr, injector) {
-        return new AngularFrameworkDelegate(cfr, injector, this.appRef);
-    };
-    return AngularDelegate;
-}());
-AngularDelegate.decorators = [
-    { type: core.Injectable },
-];
-AngularDelegate.ctorParameters = function () { return [
-    { type: core.ApplicationRef, },
-]; };
-var AngularFrameworkDelegate = /** @class */ (function () {
-    function AngularFrameworkDelegate(cfr, injector, appRef) {
-        this.cfr = cfr;
-        this.injector = injector;
-        this.appRef = appRef;
-        this.elRefMap = new WeakMap();
-    }
-    AngularFrameworkDelegate.prototype.attachViewToDom = function (container, component, data, cssClasses) {
-        var componentFactory = this.cfr.resolveComponentFactory(component);
-        var hostElement = document.createElement(componentFactory.selector);
-        if (data) {
-            Object.assign(hostElement, data);
-        }
-        var childInjector = core.Injector.create([], this.injector);
-        var componentRef = componentFactory.create(childInjector, [], hostElement);
-        try {
-            for (var cssClasses_1 = __values(cssClasses), cssClasses_1_1 = cssClasses_1.next(); !cssClasses_1_1.done; cssClasses_1_1 = cssClasses_1.next()) {
-                var clazz = cssClasses_1_1.value;
-                hostElement.classList.add(clazz);
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (cssClasses_1_1 && !cssClasses_1_1.done && (_a = cssClasses_1.return)) _a.call(cssClasses_1);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-        container.appendChild(hostElement);
-        this.appRef.attachView(componentRef.hostView);
-        this.elRefMap.set(hostElement, componentRef);
-        return Promise.resolve(hostElement);
-        var e_1, _a;
-    };
-    AngularFrameworkDelegate.prototype.removeViewFromDom = function (_container, component) {
-        var mountingData = this.elRefMap.get(component);
-        if (mountingData) {
-            mountingData.componentRef.destroy();
-            this.elRefMap.delete(component);
-        }
-        return Promise.resolve();
-    };
-    return AngularFrameworkDelegate;
-}());
-var ModalController = /** @class */ (function (_super) {
-    __extends(ModalController, _super);
-    function ModalController(cfr, injector, angularDelegate) {
-        var _this = _super.call(this, 'ion-modal-controller') || this;
-        _this.cfr = cfr;
-        _this.injector = injector;
-        _this.angularDelegate = angularDelegate;
-        return _this;
-    }
-    ModalController.prototype.create = function (opts) {
-        return _super.prototype.create.call(this, Object.assign({}, opts, { delegate: this.angularDelegate.create(this.cfr, this.injector) }));
-    };
-    return ModalController;
-}(OverlayBaseController));
-ModalController.decorators = [
-    { type: core.Injectable },
-];
-ModalController.ctorParameters = function () { return [
-    { type: core.ComponentFactoryResolver, },
-    { type: core.Injector, },
-    { type: AngularDelegate, },
-]; };
 var PopoverController = /** @class */ (function (_super) {
     __extends(PopoverController, _super);
     function PopoverController(cfr, injector, angularDelegate) {
